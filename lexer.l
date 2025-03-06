@@ -91,7 +91,7 @@ KEYWORD	"and"|"as"|"begin"|"break"|"byte"|"continue"|"decl"|"def"|"elif"|"else"|
 [\+\-\*\/%\!\&\|\=\<\>]		{ return (token_t)yytext[0]; }
 [\(\)\[\]\,\:]			{ return (token_t)yytext[0]; }
 
-^[ \t]+	{
+^[ \t]*	{
 	size_t cur_len = get_indent_length(yyleng, yytext),
 	       top = stack_empty(indent_stack) ?
 		       0 : stack_peek(indent_stack, size_t);
@@ -104,6 +104,7 @@ KEYWORD	"and"|"as"|"begin"|"break"|"byte"|"continue"|"decl"|"def"|"elif"|"else"|
 	if (cur_len < top) {
 		UNUSED(stack_pop(indent_stack, size_t));
 		yyleng -= cur_len - top;
+		// FIXME: Make sure beginning of line remains
 		return TOK_IND_END;
 	}
 }
