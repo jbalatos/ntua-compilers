@@ -1,7 +1,10 @@
 %{
 #include "util.h"
 #include "stack.h"
+%}
 
+%{
+/***** INDENTATION *****/
 #define MAX_INDENT_LEVEL 42
 #define TAB_WIDTH 4
 
@@ -14,7 +17,16 @@ size_t get_indent_length (size_t n, const char str[static n])
 	while (n--) res += str[n] == ' ' ? 1 : TAB_WIDTH;
 	return res;
 }
+%}
 
+%{
+/***** MULTILINE COMMENTS *****/
+size_t comment_depth = 0;
+%}
+%x COMMENT
+
+%{
+/***** TOKENS *****/
 typedef enum {
 	TOK_EOF = 0,
 	TOK_ERROR = 256,
@@ -98,8 +110,17 @@ KEYWORD	"and"|"as"|"begin"|"break"|"byte"|"continue"|"decl"|"def"|"elif"|"else"|
 [ \t]+	/* */
 \n	/* */
 
-\#.*$		/* */
-.		{ eprintf("Illegal character: '%c'(%d)\n", yytext[0], (int)yytext[0]); }
+\#.*$		/* single-line */
+\(\*		{ comment_depth = 1; BEGIN(COMMENT); }
+<COMMENT>{
+	\(\*	{ comment_depth++; }
+	\*\)	{ if (--comment_depth == 0) BEGIN(INITIAL); }
+	.|\n     /* eat up any unmatched character */
+}
+
+.		{
+	eprintf("Illegal character: '%c'(%d)\n", yytext[0], (int)yytext[0]);
+}
 
 %%
 
