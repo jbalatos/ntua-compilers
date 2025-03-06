@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install GNU flex
-      run: sudo apt install -y flex
+      run: sudo apt-get install -y flex libfl-dev
 
     - name: Make lexer
       run: make lexer
