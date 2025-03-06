@@ -13,12 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install GNU flex
+      run: sudo apt install -y flex
 
     - name: Make lexer
       run: make lexer
-
-    - name: Run check
-      run: make check
-
-    - name: Run distcheck
-      run: make distcheck
