@@ -63,7 +63,7 @@ const char *tok_type (token_t token)
 	case TOK_OP_NE:
 	case TOK_OP_LE:
 	case TOK_OP_GE:
-	case TOK_OP_ASSIGN:	return "operator";
+	case TOK_OP_ASSIGN:	return "operator\t";
 	case TOK_IND_START:	return "indent start";
 	case TOK_IND_END:	return "indent end";
 	case TOK_ERROR:		return "error\t";
@@ -88,6 +88,10 @@ KEYWORD	"and"|"as"|"begin"|"break"|"byte"|"continue"|"decl"|"def"|"elif"|"else"|
 \'{CHAR}\'			{ return TOK_CONST_CHAR; }
 \"{CHAR}*\"			{ return TOK_CONST_STRING; }
 
+"<>"				{ return TOK_OP_NE; }
+"<="				{ return TOK_OP_LE; }
+">="				{ return TOK_OP_GE; }
+":="				{ return TOK_OP_ASSIGN; }
 [\+\-\*\/%\!\&\|\=\<\>]		{ return (token_t)yytext[0]; }
 [\(\)\[\]\,\:]			{ return (token_t)yytext[0]; }
 
